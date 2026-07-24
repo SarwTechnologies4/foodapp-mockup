@@ -91,7 +91,7 @@ window.MOCK_SERVICE_CATEGORIES = [
   },
   {
     id: "svc-delivery",
-    name: "Delivery / Takeaway",
+    name: "Wellness",
     questions: [
       { id: "q-t1", text: "How would you rate the delivery / pickup experience?", enabled: true },
       { id: "q-t2", text: "Was the order accurate and complete?", enabled: true },
@@ -126,7 +126,7 @@ window.MOCK_FEEDBACK = [
     phone: "+977 9841234567",
     email: "anisha.sharma@email.com",
     stars: 5,
-    services: ["Dining / Restaurant", "Delivery / Takeaway"],
+    services: ["Dining / Restaurant", "Wellness"],
     remarks: "Everything was perfect!",
     submittedAt: "2026-07-20 14:32",
     answers: [
@@ -146,17 +146,17 @@ window.MOCK_FEEDBACK = [
         stars: 4,
       },
       {
-        service: "Delivery / Takeaway",
+        service: "Wellness",
         question: "How would you rate the delivery / pickup experience?",
         stars: 5,
       },
       {
-        service: "Delivery / Takeaway",
+        service: "Wellness",
         question: "Was the order accurate and complete?",
         stars: 5,
       },
       {
-        service: "Delivery / Takeaway",
+        service: "Wellness",
         question: "How would you rate the packaging?",
         stars: 4,
       },
@@ -248,22 +248,22 @@ window.MOCK_FEEDBACK = [
     phone: "+977 9845566778",
     email: "priya.m@email.com",
     stars: 2,
-    services: ["Delivery / Takeaway"],
+    services: ["Wellness"],
     remarks: "Food was cold on arrival.",
     submittedAt: "2026-07-16 20:15",
     answers: [
       {
-        service: "Delivery / Takeaway",
+        service: "Wellness",
         question: "How would you rate the delivery / pickup experience?",
         stars: 2,
       },
       {
-        service: "Delivery / Takeaway",
+        service: "Wellness",
         question: "Was the order accurate and complete?",
         stars: 3,
       },
       {
-        service: "Delivery / Takeaway",
+        service: "Wellness",
         question: "How would you rate the packaging?",
         stars: 2,
       },
@@ -357,22 +357,22 @@ window.MOCK_FEEDBACK = [
     phone: "+977 9822233445",
     email: "deepak.s@email.com",
     stars: 1,
-    services: ["Delivery / Takeaway"],
+    services: ["Wellness"],
     remarks: "Wrong order received.",
     submittedAt: "2026-07-13 12:10",
     answers: [
       {
-        service: "Delivery / Takeaway",
+        service: "Wellness",
         question: "How would you rate the delivery / pickup experience?",
         stars: 1,
       },
       {
-        service: "Delivery / Takeaway",
+        service: "Wellness",
         question: "Was the order accurate and complete?",
         stars: 1,
       },
       {
-        service: "Delivery / Takeaway",
+        service: "Wellness",
         question: "How would you rate the packaging?",
         stars: 2,
       },

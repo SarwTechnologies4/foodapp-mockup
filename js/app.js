@@ -417,11 +417,14 @@
 
   function renderFeedbackForm() {
     const serviceChips = MOCK_SERVICE_CATEGORIES.map(function (cat) {
+      const checked = cat.id === "svc-dining" ? " checked" : "";
       return (
         '<label class="service-chip">' +
         '<input type="checkbox" data-service-id="' +
         cat.id +
-        '" />' +
+        '"' +
+        checked +
+        " />" +
         "<span>" +
         '<svg class="chip-check" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>' +
         cat.name +
@@ -446,13 +449,14 @@
       "</div>" +
       "</fieldset>" +
       '<fieldset class="form-section">' +
-      "<legend>Services used <em>*</em></legend>" +
+      "<legend>Services used</legend>" +
       '<p class="field-hint">You can select more than one.</p>' +
       '<div class="service-chip-list" id="service-chip-list">' +
       serviceChips +
       "</div>" +
       "</fieldset>" +
       '<div id="dynamic-questions" class="dynamic-questions"></div>' +
+      '<div id="followup-prompt" class="followup-prompt" hidden></div>' +
       '<fieldset class="form-section">' +
       "<legend>Remarks / Comments</legend>" +
       '<textarea class="field-input remarks-input" name="remarks" rows="4" placeholder="Anything else you would like to share?"></textarea>' +
@@ -466,12 +470,91 @@
     );
   }
 
+  function collectRatings() {
+    const ratings = {};
+    document.querySelectorAll("[data-star-picker]").forEach(function (picker) {
+      const id = picker.getAttribute("data-question-id");
+      const rating = Number(picker.getAttribute("data-rating") || 0);
+      if (id && rating > 0) ratings[id] = rating;
+    });
+    return ratings;
+  }
+
+  function applyRatings(ratings) {
+    if (!ratings) return;
+    Object.keys(ratings).forEach(function (id) {
+      const picker = document.querySelector(
+        '[data-star-picker][data-question-id="' + id + '"]'
+      );
+      if (!picker) return;
+      const value = ratings[id];
+      picker.setAttribute("data-rating", String(value));
+      picker.querySelectorAll(".star-btn").forEach(function (b, idx) {
+        b.classList.toggle("filled", idx < value);
+      });
+    });
+  }
+
+  function getAvailableFollowups(selectedIds) {
+    return MOCK_SERVICE_CATEGORIES.map(function (c) {
+      return c.id;
+    }).filter(function (id) {
+      return selectedIds.indexOf(id) === -1;
+    });
+  }
+
+  function shouldShowFollowupPrompt(selectedIds) {
+    if (!selectedIds.length) return false;
+    return getAvailableFollowups(selectedIds).length > 0;
+  }
+
+  function updateFollowupPrompt(selectedIds) {
+    const prompt = document.getElementById("followup-prompt");
+    if (!prompt) return;
+
+    if (!shouldShowFollowupPrompt(selectedIds)) {
+      prompt.hidden = true;
+      prompt.innerHTML = "";
+      return;
+    }
+
+    const available = getAvailableFollowups(selectedIds);
+    const options = available
+      .map(function (id) {
+        const cat = MOCK_SERVICE_CATEGORIES.find(function (c) {
+          return c.id === id;
+        });
+        if (!cat) return "";
+        return (
+          '<label class="followup-option">' +
+          '<input type="checkbox" data-followup-id="' +
+          id +
+          '" />' +
+          "<span>" +
+          cat.name +
+          "</span>" +
+          "</label>"
+        );
+      })
+      .join("");
+
+    prompt.hidden = false;
+    prompt.innerHTML =
+      '<p class="followup-title">Do you also want to review other services?</p>' +
+      '<div class="followup-options">' +
+      options +
+      "</div>";
+  }
+
   function buildQuestionsForServices(selectedIds) {
     const container = document.getElementById("dynamic-questions");
     if (!container) return;
 
+    const savedRatings = collectRatings();
+
     if (!selectedIds.length) {
       container.innerHTML = "";
+      updateFollowupPrompt(selectedIds);
       return;
     }
 
@@ -519,6 +602,8 @@
 
     container.innerHTML = sections;
     bindStarPickers(container);
+    applyRatings(savedRatings);
+    updateFollowupPrompt(selectedIds);
   }
 
   function bindStarPickers(root) {
@@ -807,11 +892,30 @@
         });
     }
 
+    function setServiceChecked(serviceId, checked) {
+      const input = list.querySelector(
+        'input[type="checkbox"][data-service-id="' + serviceId + '"]'
+      );
+      if (input) input.checked = checked;
+    }
+
     list.querySelectorAll('input[type="checkbox"]').forEach(function (cb) {
       cb.addEventListener("change", function () {
         buildQuestionsForServices(selectedIds());
       });
     });
+
+    const prompt = document.getElementById("followup-prompt");
+    if (prompt) {
+      prompt.addEventListener("change", function (e) {
+        const input = e.target.closest("input[data-followup-id]");
+        if (!input) return;
+        setServiceChecked(input.getAttribute("data-followup-id"), input.checked);
+        buildQuestionsForServices(selectedIds());
+      });
+    }
+
+    buildQuestionsForServices(selectedIds());
 
     const form = document.getElementById("feedback-form");
     if (form) {

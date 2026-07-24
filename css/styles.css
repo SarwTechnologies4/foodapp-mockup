@@ -1113,6 +1113,47 @@ body.is-form-mode {
   margin-bottom: 1rem;
 }
 
+.followup-prompt {
+  margin: 0 0 1.25rem;
+  padding: 1rem 1.1rem;
+  border: 1px solid var(--amber-200);
+  border-radius: 0.75rem;
+  background: linear-gradient(180deg, #fffdf8 0%, var(--amber-50) 100%);
+}
+
+.followup-prompt[hidden] {
+  display: none;
+}
+
+.followup-title {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--foreground);
+  margin-bottom: 0.75rem;
+}
+
+.followup-options {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.followup-option {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  cursor: pointer;
+  padding: 0.4rem 0.7rem;
+  border: 1px solid var(--border);
+  border-radius: 0.5rem;
+  background: white;
+  font-size: 0.85rem;
+}
+
+.followup-option input {
+  accent-color: var(--primary);
+}
+
 .question-section {
   border: 1px solid var(--border);
   border-radius: 0.75rem;
